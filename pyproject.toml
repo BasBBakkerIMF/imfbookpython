@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "imfpythonbook"
+version = "0.1.0"
+description = "Utilities for IMF and WEO-styled charts using Matplotlib and Plotnine."
+readme = "README.md"
+authors = [
+  { name = "Bas Bakker and Greta Polo" },
+]
+license = { text = "MIT License" }
+requires-python = ">=3.8"
+
+dependencies = [
+  "matplotlib>=3.6.0",
+]
+
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage   = "https://example.com/imfpythonbook"
+Repository = "https://github.com/yourorg/imfpythonbook"
+
+[tool.setuptools]
+package-dir = {"" = "src"}

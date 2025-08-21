@@ -1,0 +1,4 @@
+#numpy>=1.23,<2.0
+#pandas
+# plotnine with no dependencies
+#matplotlib
