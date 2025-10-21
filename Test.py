@@ -5,7 +5,7 @@ from plotnine import (
     ggplot, aes, geom_line, geom_bar, scale_fill_manual,
     scale_y_continuous, facet_wrap, ggtitle, labs
 )
-import imfpythonbook
+import imfpythonbook as ip
 
 # Setup
 x = np.linspace(0, 10, 100)
@@ -14,75 +14,71 @@ df_bar = pd.DataFrame({"category": ["A", "B", "C", "D"], "value": [3, 1, 4, 2]})
 
 # --- IMF_matplotlib Tests ---
 def test_imf_matplotlib_line():
-    imfpythonbook.IMF_matplotlib.set_imf_theme()
+    ip.matplotlib.set_imf_theme()
     fig, ax = plt.subplots()
-    ax.plot(x, np.sin(x), color=imfpythonbook.IMF_matplotlib.blue)
-    imfpythonbook.IMF_matplotlib.apply_imf_titles(ax, "IMF Theme", "Subtitle")
+    ax.plot(x, np.sin(x), color=ip.colors.blue)
+    ip.matplotlib.set_titles(ax, "IMF Theme", "Subtitle")
     plt.show()
 
 def test_imf_matplotlib_bar():
-    imfpythonbook.IMF_matplotlib.set_imf_panel_theme()
+    ip.matplotlib.set_imf_panel_theme()
     fig, ax = plt.subplots()
-    ax.bar(["A", "B", "C", "D"], [3, 1, 4, 2], color=[
-        imfpythonbook.IMF_matplotlib.blue,
-        imfpythonbook.IMF_matplotlib.green,
-        imfpythonbook.IMF_matplotlib.red,
-        imfpythonbook.IMF_matplotlib.grey])
-    imfpythonbook.IMF_matplotlib.apply_imf_panel_titles(ax, "Panel Title", "Panel Subtitle")
+    ax.bar(["A", "B", "C", "D"], [3, 1, 4, 2],
+           color=[ip.colors.blue, ip.colors.green, ip.colors.red, ip.colors.grey])
+    ip.matplotlib.set_panel_titles(ax, "Panel Title", "Panel Subtitle")
     plt.show()
 
 def test_imf_matplotlib_annotation():
     fig, ax = plt.subplots()
-    ax.plot(x, np.cos(x), color=imfpythonbook.IMF_matplotlib.red)
-    imfpythonbook.IMF_matplotlib.add_text_to_figure(fig, "Figure Caption", y_offset=0.9)
+    ax.plot(x, np.cos(x), color=ip.colors.red)
+    # Keep module-specific helpers as-is (not aliased on purpose)
+    ip.IMF_matplotlib.add_text_to_figure(fig, "Figure Caption", y_offset=0.9)
     plt.show()
 
 def test_imf_matplotlib_alt_annotation():
     fig, ax = plt.subplots()
-    ax.plot(x, np.tan(x), color=imfpythonbook.IMF_matplotlib.green)
-    imfpythonbook.IMF_matplotlib.add_text_to_figure_new(fig, "Centered Caption", y_offset=0.8)
+    ax.plot(x, np.tan(x), color=ip.colors.green)
+    ip.IMF_matplotlib.add_text_to_figure_new(fig, "Centered Caption", y_offset=0.8)
     plt.show()
 
 # --- IMF_plotnine Tests ---
 def test_imf_plotnine_line():
     p = (
         ggplot(df, aes("x", "sinx"))
-        + geom_line(color=imfpythonbook.IMF_plotnine.blue)
-        + imfpythonbook.IMF_plotnine.set_imf_theme_plotnine()
+        + geom_line(color=ip.colors.blue)
+        + ip.plotnine.set_imf_theme()
     )
-    for layer in imfpythonbook.IMF_plotnine.apply_imf_titles_plotnine("IMF Theme", "Subtitle"):
+    for layer in ip.plotnine.set_titles("IMF Theme", "Subtitle"):
         p += layer
     print(p)
 
 def test_imf_plotnine_bar():
     p = (
         ggplot(df_bar, aes("category", "value", fill="category"))
-        + geom_bar(stat="identity")
-        + scale_fill_manual(values=[
-            imfpythonbook.IMF_plotnine.blue,
-            imfpythonbook.IMF_plotnine.green,
-            imfpythonbook.IMF_plotnine.red,
-            imfpythonbook.IMF_plotnine.grey])
-        + imfpythonbook.IMF_plotnine.set_imf_panel_theme_plotnine()
+        + geom_bar(stat="identity" )
+        + scale_fill_manual(values=[ip.colors.blue, ip.colors.green, ip.colors.red, ip.colors.grey])
+        + ip.plotnine.set_imf_panel_theme()
     )
-    for layer in imfpythonbook.IMF_plotnine.apply_imf_panel_titles_plotnine("Panel Title", "Panel Subtitle"):
+    for layer in ip.plotnine.set_panel_titles("Panel Title", "Panel Subtitle"):
         p += layer
     print(p)
 
 def test_imf_plotnine_annotation():
-    p = imfpythonbook.IMF_plotnine.add_text_to_figure_plotnine(
+    p = ip.IMF_plotnine.add_text_to_figure_plotnine(
         ggplot(df, aes("x", "cosx"))
-        + geom_line(color=imfpythonbook.IMF_plotnine.red)
-        + imfpythonbook.IMF_plotnine.set_imf_theme_plotnine(),
-        "Caption", y_offset=1.05)
+        + geom_line(color=ip.colors.red)
+        + ip.plotnine.set_imf_theme(),
+        "Caption", y_offset=1.05
+    )
     print(p)
 
 def test_imf_plotnine_alt_annotation():
-    p = imfpythonbook.IMF_plotnine.add_text_to_figure_new_plotnine(
+    p = ip.IMF_plotnine.add_text_to_figure_new_plotnine(
         ggplot(df, aes("x", "tanx"))
-        + geom_line(color=imfpythonbook.IMF_plotnine.green)
-        + imfpythonbook.IMF_plotnine.set_imf_theme_plotnine(),
-        "Centered Caption", y_offset=1.05)
+        + geom_line(color=ip.colors.green)
+        + ip.plotnine.set_imf_theme(),
+        "Centered Caption", y_offset=1.05
+    )
     print(p)
 
 # --- WEO Matplotlib Example Rebuilds ---
@@ -263,4 +259,4 @@ if __name__ == "__main__":
     test_weo_theme_gdp_panel_demo()
 
     test_weo_plotnine_unemployment_demo()
-    
+    test_weo_plotnine_gdp_panel_demo()

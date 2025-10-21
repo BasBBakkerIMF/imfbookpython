@@ -152,6 +152,46 @@ def make_x_major_tick_segments(x_breaks, y_min, y_max, tick_length_fraction=0.02
         })
     return pd.DataFrame(rows)
 
+def add_forecast_shading_plotnine(start_year, end_year, y_range, fill_color=light_grey, alpha=0.3):
+    """
+    Return a plotnine layer that shades the forecast window.
+
+    Parameters
+    ----------
+    start_year : int or float
+        Beginning of forecast window on the x-axis.
+    end_year : int or float
+        End of forecast window on the x-axis.
+    y_range : (float, float)
+        Tuple/list with (ymin, ymax) to cover the plot area vertically.
+    fill_color : str
+        Hex color for the rectangle fill. Defaults to WEO light_grey.
+    alpha : float
+        Opacity of the rectangle.
+
+    Returns
+    -------
+    plotnine layer (geom_rect)
+    """
+    import pandas as pd
+    from plotnine import aes, geom_rect
+
+    df = pd.DataFrame({
+        'xmin': [start_year],
+        'xmax': [end_year],
+        'ymin': [y_range[0]],
+        'ymax': [y_range[1]],
+    })
+    return geom_rect(
+        data=df,
+        mapping=aes(xmin='xmin', xmax='xmax', ymin='ymin', ymax='ymax'),
+        inherit_aes=False,
+        fill=fill_color,
+        alpha=alpha,
+    )
+
+
+
 ### Examples
 # # ---- example: unemployment rate change ----
 # def unemployment_example_plotnine(save_path):
