@@ -178,10 +178,19 @@ layout. Standard and panel themes default to an 8.5-by-5.5-inch figure. Set
 For multi-chart layouts, compose Plotnine charts with `|` and `/` and use
 `plot_annotation()` for a shared title and subtitle. These examples use
 explicit color scales to match the R package's `scale_imf_colors()` helpers.
+When running the examples sequentially as a Windows script with the TkAgg
+backend, closing earlier plot windows can leave a stale toolbar callback. For
+rendering these compositions without opening GUI windows, select the
+non-interactive Agg backend and display the rendered images inline:
 
 Create reproducible data for both panel examples:
 
 ```{python}
+from io import BytesIO
+import matplotlib
+matplotlib.use("Agg")
+from IPython.display import Image, display
+
 import numpy as np
 import pandas as pd
 
@@ -232,7 +241,7 @@ p3 = (
     + ip.plotnine.set_imf_panel_theme()
 )
 
-(
+composition = (
     (p1 | p2) / p3
     + plot_annotation(
         title="Panel Test: theme_imf_panel()",
@@ -242,7 +251,10 @@ p3 = (
             + theme(figure_size=(13, 11))
         ),
     )
-).show()
+)
+image = BytesIO()
+composition.draw().savefig(image, format="png", dpi=150, bbox_inches="tight")
+display(Image(data=image.getvalue()))
 ```
 
 The 2027 panel theme uses the updated IMF blue:
@@ -280,7 +292,7 @@ p3_2027 = (
     + ip.plotnine.set_imf_panel_2027_theme()
 )
 
-(
+composition_2027 = (
     (p1_2027 | p2_2027) / p3_2027
     + plot_annotation(
         title="Panel Test: theme_imf_panel_2027()",
@@ -290,7 +302,12 @@ p3_2027 = (
             + theme(figure_size=(13, 11))
         ),
     )
-).show()
+)
+image_2027 = BytesIO()
+composition_2027.draw().savefig(
+    image_2027, format="png", dpi=150, bbox_inches="tight"
+)
+display(Image(data=image_2027.getvalue()))
 ```
 
 ---
