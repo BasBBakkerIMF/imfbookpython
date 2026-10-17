@@ -1,17 +1,31 @@
 # imfpythonbook
 
-`imfpythonbook` is a small collection of helper functions for producing publication-quality charts following the International Monetary Fund (IMF) and World Economic Outlook (WEO) style guides. The package provides two sets of utilities:
 
-- **Matplotlib helpers** for configuring fonts, colors, themes, and axis tick behavior compatible with IMF and WEO charts.
-- **Plotnine (ggplot-style) helpers** that mirror the look and feel of the same charts using the `plotnine` library.
+`imfpythonbook` is a small collection of helper functions for producing
+publication-quality charts following the International Monetary Fund
+(IMF) and World Economic Outlook (WEO) style guides. The package
+provides two sets of utilities:
 
-The modules contained in this package were originally developed for the IMF Python book and have been packaged here for reuse.
+- **Matplotlib helpers** for configuring fonts, colors, themes, and axis
+  tick behavior compatible with IMF and WEO charts.
+- **Plotnine (ggplot-style) helpers** that mirror the look and feel of
+  the same charts using the `plotnine` library.
+
+The modules contained in this package were originally developed for the
+IMF Python book and have been packaged here for reuse.
 
 ## Installation
 
-Install directly from GitHub:
+Before installing this project, make sure you have the latest version of
+`plotnine` installed:
 
-```sh
+``` sh
+python -m pip install --upgrade plotnine
+```
+
+Then install this package directly from GitHub:
+
+``` sh
 pip install git+https://github.com/BasBBakkerIMF/imfbookpython.git
 ```
 
@@ -19,7 +33,7 @@ pip install git+https://github.com/BasBBakkerIMF/imfbookpython.git
 
 Import the package once and use the concise API:
 
-```python
+``` python
 import imfpythonbook as ip
 ```
 
@@ -27,7 +41,7 @@ import imfpythonbook as ip
 
 #### Matplotlib: IMF theme + simple line chart
 
-```python
+``` python
 import numpy as np
 import matplotlib.pyplot as plt
 import imfpythonbook as ip
@@ -41,9 +55,11 @@ ax.plot(x, np.sin(x), color=ip.colors.blue)
 plt.show()
 ```
 
+![](README_files/figure-commonmark/cell-3-output-1.png)
+
 #### Plotnine: IMF theme + simple line chart
 
-```python
+``` python
 import numpy as np, pandas as pd
 from plotnine import ggplot, aes, geom_line
 import imfpythonbook as ip
@@ -59,12 +75,15 @@ p = (
 for layer in ip.plotnine.set_titles("IMF Theme Example", "Subtitle"):
     p += layer
 
-print(p)
+p.show()
 ```
+
+<img src="README_files/figure-commonmark/cell-4-output-1.png"
+width="336" height="240" />
 
 #### IMF Matplotlib Bar Chart
 
-```python
+``` python
 import matplotlib.pyplot as plt
 import imfpythonbook as ip
 
@@ -79,9 +98,11 @@ ip.matplotlib.set_panel_titles(ax, "Panel Title", "Panel Subtitle")
 plt.show()
 ```
 
+![](README_files/figure-commonmark/cell-5-output-1.png)
+
 #### Plotnine Bar Chart (IMF style)
 
-```python
+``` python
 import pandas as pd
 from plotnine import ggplot, aes, geom_bar, scale_fill_manual
 import imfpythonbook as ip
@@ -98,33 +119,44 @@ p = (
 for layer in ip.plotnine.set_panel_titles("Panel Title", "Panel Subtitle"):
     p += layer
 
-print(p)
+p.show()
 ```
+
+<img src="README_files/figure-commonmark/cell-6-output-1.png"
+width="336" height="240" />
 
 #### IMF 2027 themes
 
-The original IMF theme functions remain available. Use the 2027 variants for
-the Arial-based theme defined in the R theme file:
+The original IMF theme functions remain available. Use the 2027 variants
+for the Arial-based theme defined in the R theme file:
 
-```python
+``` python
 import matplotlib.pyplot as plt
 import imfpythonbook as ip
 
 ip.matplotlib.set_imf_2027_theme()
+
 fig, ax = plt.subplots()
+ax.bar(
+    ["A", "B", "C", "D"], [3, 1, 4, 2],
+    color=[ip.colors.blue, ip.colors.green, ip.colors.red, ip.colors.grey]
+)
 ip.matplotlib.set_titles(ax, "IMF 2027 Theme", "Subtitle")
+plt.show()
 
 theme_2027 = ip.plotnine.set_imf_2027_theme()
 ```
 
+![](README_files/figure-commonmark/cell-7-output-1.png)
+
 For panel charts, use `ip.matplotlib.set_imf_panel_2027_theme()` or
-`ip.plotnine.set_imf_panel_2027_theme()`. The figure-level panel title themes
-from the R scripts are also available as
+`ip.plotnine.set_imf_panel_2027_theme()`. The figure-level panel title
+themes from the R scripts are also available as
 `ip.matplotlib.set_imf_panel_title_theme()` /
 `ip.plotnine.set_imf_panel_title_theme()`, and their 2027 variants via
 `*_2027_theme`.
 
----
+------------------------------------------------------------------------
 
 ## WEO-Styled Examples
 
@@ -132,7 +164,7 @@ from the R scripts are also available as
 
 #### WEO-Styled Unemployment Chart (Matplotlib)
 
-```python
+``` python
 import numpy as np, matplotlib.pyplot as plt
 from imfpythonbook.WEO_matplotlib import (
     set_weo_theme, add_y_ticks, add_x_end_ticks,
@@ -158,9 +190,11 @@ add_weo_title(ax, "Figure 1.2. Unemployment Rate Change", "(Percentage point cha
 plt.show()
 ```
 
+![](README_files/figure-commonmark/cell-8-output-1.png)
+
 #### WEO-Styled Real GDP Panel (Plotnine)
 
-```python
+``` python
 import numpy as np, pandas as pd
 from plotnine import ggplot, aes, geom_line, facet_wrap, scale_y_continuous, ggtitle, labs
 from imfpythonbook.WEO_plotnine import (
@@ -187,9 +221,12 @@ p = (
     + scale_y_continuous(breaks=breaks["major"], limits=breaks["limits"])
     + set_weo_panel_theme_plotnine()
     + add_forecast_shading_plotnine(start_year=2022, end_year=2025, y_range=breaks["limits"])
-    + ggtitle("Figure X. Real GDP Panel")
+    + ggtitle("Figure X. Real GDP Panel, Plotnine Example")
     + labs(subtitle="(Index, 2010=100)", caption="Source: Synthetic data. Real GDP index rebased to 2010=100.")
 )
 
-print(p)
+p.show()
 ```
+
+<img src="README_files/figure-commonmark/cell-9-output-1.png"
+width="336" height="240" />

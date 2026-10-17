@@ -107,7 +107,7 @@ def _imf_theme_plotnine(
                 ha="left",
                 va="bottom",
             ),
-            plot_margin="2mm",
+            plot_margin=0.02,
             legend_title=(
                 element_blank()
                 if legend_title_format is None
@@ -130,10 +130,10 @@ def set_imf_theme_plotnine(
     legend_title_format=None,
     legend_position="bottom",
     legend_direction="horizontal",
-    legend_key_height="4.5mm",
-    legend_key_width="13mm",
-    legend_spacing_x="2mm",
-    legend_spacing_y="2.5mm",
+    legend_key_height=4.5 * 72 / 25.4,
+    legend_key_width=13 * 72 / 25.4,
+    legend_spacing_x=2 * 72 / 25.4,
+    legend_spacing_y=2.5 * 72 / 25.4,
 ):
     """Return the original IMF Plotnine theme, matching ``theme_imf`` in R."""
     return _imf_theme_plotnine(
@@ -149,10 +149,10 @@ def set_imf_panel_theme_plotnine(
     legend_title_format=None,
     legend_position="bottom",
     legend_direction="horizontal",
-    legend_key_height="4.5mm",
-    legend_key_width="13mm",
-    legend_spacing_x="2mm",
-    legend_spacing_y="2.5mm",
+    legend_key_height=4.5 * 72 / 25.4,
+    legend_key_width=13 * 72 / 25.4,
+    legend_spacing_x=2 * 72 / 25.4,
+    legend_spacing_y=2.5 * 72 / 25.4,
 ):
     """Return the original IMF panel theme, matching ``theme_imf_panel`` in R."""
     return _imf_theme_plotnine(
@@ -168,10 +168,10 @@ def set_imf_2027_theme_plotnine(
     legend_title_format=None,
     legend_position="bottom",
     legend_direction="horizontal",
-    legend_key_height="4.5mm",
-    legend_key_width="13mm",
-    legend_spacing_x="2mm",
-    legend_spacing_y="2.5mm",
+    legend_key_height=4.5 * 72 / 25.4,
+    legend_key_width=13 * 72 / 25.4,
+    legend_spacing_x=2 * 72 / 25.4,
+    legend_spacing_y=2.5 * 72 / 25.4,
 ):
     """Return the 2027 IMF Plotnine theme, matching ``theme_imf_2027`` in R."""
     return _imf_theme_plotnine(
@@ -187,10 +187,10 @@ def set_imf_panel_2027_theme_plotnine(
     legend_title_format=None,
     legend_position="bottom",
     legend_direction="horizontal",
-    legend_key_height="4.5mm",
-    legend_key_width="13mm",
-    legend_spacing_x="2mm",
-    legend_spacing_y="2.5mm",
+    legend_key_height=4.5 * 72 / 25.4,
+    legend_key_width=13 * 72 / 25.4,
+    legend_spacing_x=2 * 72 / 25.4,
+    legend_spacing_y=2.5 * 72 / 25.4,
 ):
     """Return the 2027 IMF panel theme, matching ``theme_imf_panel_2027`` in R."""
     return _imf_theme_plotnine(
@@ -206,7 +206,7 @@ def set_imf_panel_title_theme_plotnine(font="Segoe UI", font_color=blue):
         plot_title=element_text(
             family=font,
             size=16,
-            face="bold",
+            weight="bold",
             color=font_color,
             ha="center",
         ),
@@ -225,7 +225,7 @@ def set_imf_panel_title_2027_theme_plotnine(font="Arial", font_color=blue_2027):
         plot_title=element_text(
             family=font,
             size=16,
-            face="bold",
+            weight="bold",
             color=font_color,
             ha="center",
         ),

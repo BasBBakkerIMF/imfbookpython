@@ -1,4 +1,8 @@
-#numpy>=1.23,<2.0
-#pandas
-# plotnine with no dependencies
-#matplotlib
+numpy>=1.23,<2.0
+pandas
+plotnine>=0.15.8
+matplotlib
+PyYAML
+nbformat
+nbclient
+ipykernel
