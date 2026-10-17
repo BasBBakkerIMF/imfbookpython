@@ -79,7 +79,7 @@ def test_imf_plotnine_bar():
     )
     for layer in ip.plotnine.set_panel_titles("Panel Title", "Panel Subtitle"):
         p += layer
-    print(p)
+    p.show()
 
 def test_imf_plotnine_annotation():
     p = ip.IMF_plotnine.add_text_to_figure_plotnine(
@@ -88,7 +88,7 @@ def test_imf_plotnine_annotation():
         + ip.plotnine.set_imf_theme(),
         "Caption", y_offset=1.05
     )
-    print(p)
+    p.show()
 
 def test_imf_plotnine_alt_annotation():
     p = ip.IMF_plotnine.add_text_to_figure_new_plotnine(
@@ -97,7 +97,7 @@ def test_imf_plotnine_alt_annotation():
         + ip.plotnine.set_imf_theme(),
         "Centered Caption", y_offset=1.05
     )
-    print(p)
+    p.show()
 
 def test_imf_plotnine_2027():
     p = (
@@ -107,7 +107,7 @@ def test_imf_plotnine_2027():
     )
     for layer in ip.plotnine.set_titles("IMF 2027 Theme", "Subtitle"):
         p += layer
-    print(p)
+    p.show()
 
 def test_imf_plotnine_panel_2027():
     p = (
@@ -122,7 +122,7 @@ def test_imf_plotnine_panel_2027():
         "IMF 2027 Panel Theme", "Panel Subtitle"
     ):
         p += layer
-    print(p)
+    p.show()
 
 
 def _make_imf_composition_test_data():
@@ -306,7 +306,7 @@ def test_weo_plotnine_unemployment_demo():
             caption="Source: IMF WEO and staff calculations."
         )
     )
-    print(p)
+    p.show()
 
 def test_weo_plotnine_gdp_panel_demo():
     from imfpythonbook.WEO_plotnine import (
@@ -346,7 +346,7 @@ def test_weo_plotnine_gdp_panel_demo():
             caption="Source: Synthetic data. Real GDP index rebased to 2010=100."
         )
     )
-    print(p)
+    p.show()
 
 # --- Entry Point ---
 if __name__ == "__main__":
