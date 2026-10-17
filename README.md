@@ -20,7 +20,7 @@ Before installing this project, make sure you have the latest version of
 `plotnine` installed:
 
 ``` sh
-python -m pip install --upgrade plotnine
+python -m pip install --upgrade "git+https://github.com/has2k1/plotnine.git"
 ```
 
 Then install this package directly from GitHub:
@@ -29,17 +29,9 @@ Then install this package directly from GitHub:
 pip install git+https://github.com/BasBBakkerIMF/imfbookpython.git
 ```
 
-## Usage
+## Quick start
 
-Import the package once and use the concise API:
-
-``` python
-import imfpythonbook as ip
-```
-
-### Usage Examples
-
-#### Matplotlib: IMF theme + simple line chart
+Import the package and make a simple Matplotlib chart:
 
 ``` python
 import numpy as np
@@ -47,7 +39,6 @@ import matplotlib.pyplot as plt
 import imfpythonbook as ip
 
 ip.matplotlib.set_imf_theme()
-
 x = np.linspace(0, 10, 100)
 fig, ax = plt.subplots()
 ip.matplotlib.set_titles(ax, "IMF Theme Example", "Subtitle")
@@ -55,33 +46,11 @@ ax.plot(x, np.sin(x), color=ip.colors.blue)
 plt.show()
 ```
 
-![](README_files/figure-commonmark/cell-3-output-1.png)
+![](README_files/figure-commonmark/cell-2-output-1.png)
 
-#### Plotnine: IMF theme + simple line chart
+## IMF charts
 
-``` python
-import numpy as np, pandas as pd
-from plotnine import ggplot, aes, geom_line
-import imfpythonbook as ip
-
-x = np.linspace(0, 10, 100)
-df = pd.DataFrame({"x": x, "y": np.sin(x)})
-
-p = (
-    ggplot(df, aes("x", "y"))
-    + geom_line(color=ip.colors.blue)
-    + ip.plotnine.set_imf_theme()
-)
-for layer in ip.plotnine.set_titles("IMF Theme Example", "Subtitle"):
-    p += layer
-
-p.show()
-```
-
-<img src="README_files/figure-commonmark/cell-4-output-1.png"
-width="336" height="240" />
-
-#### IMF Matplotlib Bar Chart
+### Matplotlib Panel Chart
 
 ``` python
 import matplotlib.pyplot as plt
@@ -92,15 +61,79 @@ ip.matplotlib.set_imf_panel_theme()
 fig, ax = plt.subplots()
 ax.bar(
     ["A", "B", "C", "D"], [3, 1, 4, 2],
-    color=[ip.colors.blue, ip.colors.green, ip.colors.red, ip.colors.grey]
+    color=[
+        ip.colors.blue,
+        ip.colors.green,
+        ip.colors.red,
+        ip.colors.grey,
+    ],
 )
 ip.matplotlib.set_panel_titles(ax, "Panel Title", "Panel Subtitle")
 plt.show()
 ```
 
-![](README_files/figure-commonmark/cell-5-output-1.png)
+![](README_files/figure-commonmark/cell-3-output-1.png)
 
-#### Plotnine Bar Chart (IMF style)
+#### 2027 themes
+
+``` python
+import matplotlib.pyplot as plt
+import imfpythonbook as ip
+
+ip.matplotlib.set_imf_2027_theme()
+fig, ax = plt.subplots()
+ax.bar(
+    ["A", "B", "C", "D"], [3, 1, 4, 2],
+    color=[ip.colors.blue_2027, ip.colors.green, ip.colors.red, ip.colors.grey]
+)
+ip.matplotlib.set_titles(ax, "IMF 2027 Theme", "Subtitle")
+plt.show()
+
+ip.matplotlib.set_imf_panel_2027_theme()
+fig, ax = plt.subplots()
+ax.bar(
+    ["A", "B", "C", "D"], [3, 1, 4, 2],
+    color=[
+        ip.colors.blue_2027,
+        ip.colors.green,
+        ip.colors.red,
+        ip.colors.grey,
+    ],
+)
+ip.matplotlib.set_panel_titles(ax, "IMF 2027 Panel Theme", "Subtitle")
+plt.show()
+```
+
+![](README_files/figure-commonmark/cell-4-output-1.png)
+
+![](README_files/figure-commonmark/cell-4-output-2.png)
+
+### Plotnine
+
+#### Standard theme
+
+``` python
+import numpy as np
+import pandas as pd
+from plotnine import ggplot, aes, geom_line
+import imfpythonbook as ip
+
+x = np.linspace(0, 10, 100)
+df = pd.DataFrame({"x": x, "y": np.sin(x)})
+p = (
+    ggplot(df, aes("x", "y"))
+    + geom_line(color=ip.colors.blue)
+    + ip.plotnine.set_imf_theme()
+)
+for layer in ip.plotnine.set_titles("IMF Theme Example", "Subtitle"):
+    p += layer
+p.show()
+```
+
+<img src="README_files/figure-commonmark/cell-5-output-1.png"
+width="408" height="264" />
+
+#### Panel chart
 
 ``` python
 import pandas as pd
@@ -108,53 +141,181 @@ from plotnine import ggplot, aes, geom_bar, scale_fill_manual
 import imfpythonbook as ip
 
 df = pd.DataFrame({"category": ["A", "B", "C", "D"], "value": [3, 1, 4, 2]})
-
 p = (
     ggplot(df, aes("category", "value", fill="category"))
     + geom_bar(stat="identity")
-    + scale_fill_manual(values=[ip.colors.blue, ip.colors.green, ip.colors.red, ip.colors.grey])
+    + scale_fill_manual(values=[
+        ip.colors.blue, ip.colors.green, ip.colors.red, ip.colors.grey
+    ])
     + ip.plotnine.set_imf_panel_theme()
 )
-
 for layer in ip.plotnine.set_panel_titles("Panel Title", "Panel Subtitle"):
     p += layer
-
 p.show()
 ```
 
 <img src="README_files/figure-commonmark/cell-6-output-1.png"
-width="336" height="240" />
+width="408" height="264" />
 
-#### IMF 2027 themes
+#### 2027 themes
 
-The original IMF theme functions remain available. Use the 2027 variants
-for the Arial-based theme defined in the R theme file:
+Use the 2027 variants for the Arial-based theme and updated IMF blue:
 
 ``` python
-import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from plotnine import ggplot, aes, geom_line
 import imfpythonbook as ip
 
-ip.matplotlib.set_imf_2027_theme()
-
-fig, ax = plt.subplots()
-ax.bar(
-    ["A", "B", "C", "D"], [3, 1, 4, 2],
-    color=[ip.colors.blue, ip.colors.green, ip.colors.red, ip.colors.grey]
+x = np.linspace(0, 10, 100)
+df = pd.DataFrame({"x": x, "y": np.sin(x)})
+p = (
+    ggplot(df, aes("x", "y"))
+    + geom_line(color=ip.colors.blue_2027)
+    + ip.plotnine.set_imf_2027_theme()
 )
-ip.matplotlib.set_titles(ax, "IMF 2027 Theme", "Subtitle")
-plt.show()
-
-theme_2027 = ip.plotnine.set_imf_2027_theme()
+for layer in ip.plotnine.set_titles("IMF 2027 Theme", "Subtitle"):
+    p += layer
+p.show()
 ```
 
-![](README_files/figure-commonmark/cell-7-output-1.png)
+<img src="README_files/figure-commonmark/cell-7-output-1.png"
+width="408" height="264" />
 
-For panel charts, use `ip.matplotlib.set_imf_panel_2027_theme()` or
-`ip.plotnine.set_imf_panel_2027_theme()`. The figure-level panel title
-themes from the R scripts are also available as
-`ip.matplotlib.set_imf_panel_title_theme()` /
-`ip.plotnine.set_imf_panel_title_theme()`, and their 2027 variants via
-`*_2027_theme`.
+Use `ip.plotnine.set_imf_panel_2027_theme()` for panel plots and
+`ip.plotnine.set_imf_panel_title_2027_theme()` for an overall panel
+title. Plotnine IMF themes use larger text for readability, while panel
+themes use smaller text so labels and legends fit within each chart in a
+multi-chart layout. Standard and panel themes default to an
+8.5-by-5.5-inch figure. Set `figure_size=(width, height)` to customize
+the dimensions.
+
+#### Multi-chart panels
+
+For multi-chart layouts, compose Plotnine charts with `|` and `/` and
+use `plot_annotation()` for a shared title and subtitle. These examples
+use explicit color scales to match the R package’s `scale_imf_colors()`
+helpers.
+
+Create reproducible data for both panel examples:
+
+``` python
+import numpy as np
+import pandas as pd
+
+rng = np.random.default_rng(123)
+panel_data = pd.DataFrame({
+    "dates": pd.date_range("2020-01-01", periods=12, freq="MS"),
+    "category": np.repeat(["A", "B", "C"], 4),
+    "value1": rng.uniform(50, 100, 12),
+    "value2": rng.uniform(20, 80, 12),
+})
+```
+
+Original IMF colors and panel theme:
+
+``` python
+from plotnine import (
+    aes, geom_bar, geom_line, geom_point, ggplot, labs,
+    scale_color_manual, scale_fill_manual, scale_x_datetime, theme,
+)
+from plotnine.composition import plot_annotation
+import imfpythonbook as ip
+
+panel_colors = [ip.colors.blue, ip.colors.green, ip.colors.red]
+
+p1 = (
+    ggplot(panel_data, aes("dates", "value1", color="category"))
+    + geom_line(size=1.5)
+    + scale_x_datetime(date_breaks="2 months", date_labels="%b\n%Y")
+    + scale_color_manual(values=panel_colors)
+    + labs(title="IMF Line Chart", subtitle="IMF palette")
+    + ip.plotnine.set_imf_panel_theme()
+)
+
+p2 = (
+    ggplot(panel_data, aes("dates", "value1", fill="category"))
+    + geom_bar(stat="identity", position="stack")
+    + scale_x_datetime(date_breaks="2 months", date_labels="%b\n%Y")
+    + scale_fill_manual(values=panel_colors)
+    + labs(title="IMF Stacked Bar", subtitle="IMF palette")
+    + ip.plotnine.set_imf_panel_theme()
+)
+
+p3 = (
+    ggplot(panel_data, aes("value1", "value2", color="category"))
+    + geom_point(size=3)
+    + scale_color_manual(values=panel_colors)
+    + labs(title="IMF Scatter", subtitle="IMF palette")
+    + ip.plotnine.set_imf_panel_theme()
+)
+
+(
+    (p1 | p2) / p3
+    + plot_annotation(
+        title="Panel Test: theme_imf_panel()",
+        subtitle="Multiple plots in a panel layout",
+        theme=(
+            ip.plotnine.set_imf_panel_title_theme()
+            + theme(figure_size=(13, 11))
+        ),
+    )
+).show()
+```
+
+<img src="README_files/figure-commonmark/cell-9-output-1.png"
+width="624" height="528" />
+
+The 2027 panel theme uses the updated IMF blue:
+
+``` python
+panel_colors_2027 = [
+    ip.colors.blue_2027,
+    ip.colors.green,
+    ip.colors.red,
+]
+
+p1_2027 = (
+    ggplot(panel_data, aes("dates", "value1", color="category"))
+    + geom_line(size=1.5)
+    + scale_x_datetime(date_breaks="2 months", date_labels="%b\n%Y")
+    + scale_color_manual(values=panel_colors_2027)
+    + labs(title="IMF Line Chart", subtitle="IMF palette")
+    + ip.plotnine.set_imf_panel_2027_theme()
+)
+
+p2_2027 = (
+    ggplot(panel_data, aes("dates", "value1", fill="category"))
+    + geom_bar(stat="identity", position="stack")
+    + scale_x_datetime(date_breaks="2 months", date_labels="%b\n%Y")
+    + scale_fill_manual(values=panel_colors_2027)
+    + labs(title="IMF Stacked Bar", subtitle="IMF palette")
+    + ip.plotnine.set_imf_panel_2027_theme()
+)
+
+p3_2027 = (
+    ggplot(panel_data, aes("value1", "value2", color="category"))
+    + geom_point(size=3)
+    + scale_color_manual(values=panel_colors_2027)
+    + labs(title="IMF Scatter", subtitle="IMF palette")
+    + ip.plotnine.set_imf_panel_2027_theme()
+)
+
+(
+    (p1_2027 | p2_2027) / p3_2027
+    + plot_annotation(
+        title="Panel Test: theme_imf_panel_2027()",
+        subtitle="Multiple plots in a panel layout",
+        theme=(
+            ip.plotnine.set_imf_panel_title_2027_theme()
+            + theme(figure_size=(13, 11))
+        ),
+    )
+).show()
+```
+
+<img src="README_files/figure-commonmark/cell-10-output-1.png"
+width="624" height="528" />
 
 ------------------------------------------------------------------------
 
@@ -190,7 +351,7 @@ add_weo_title(ax, "Figure 1.2. Unemployment Rate Change", "(Percentage point cha
 plt.show()
 ```
 
-![](README_files/figure-commonmark/cell-8-output-1.png)
+![](README_files/figure-commonmark/cell-11-output-1.png)
 
 #### WEO-Styled Real GDP Panel (Plotnine)
 
@@ -216,10 +377,10 @@ breaks = generate_breaks_auto(df["value"])
 
 p = (
     ggplot(df, aes("year", "value"))
-    + geom_line(color=blue, size=0.7)
+    + geom_line(color=blue, size=1.1)
     + facet_wrap("~country")
     + scale_y_continuous(breaks=breaks["major"], limits=breaks["limits"])
-    + set_weo_panel_theme_plotnine()
+    + set_weo_panel_theme_plotnine(figure_size=(16, 14.67))
     + add_forecast_shading_plotnine(start_year=2022, end_year=2025, y_range=breaks["limits"])
     + ggtitle("Figure X. Real GDP Panel, Plotnine Example")
     + labs(subtitle="(Index, 2010=100)", caption="Source: Synthetic data. Real GDP index rebased to 2010=100.")
@@ -228,5 +389,5 @@ p = (
 p.show()
 ```
 
-<img src="README_files/figure-commonmark/cell-9-output-1.png"
-width="336" height="240" />
+<img src="README_files/figure-commonmark/cell-12-output-1.png"
+width="768" height="704" />

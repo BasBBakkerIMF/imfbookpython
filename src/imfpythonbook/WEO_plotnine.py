@@ -74,18 +74,19 @@ def set_weo_theme_plotnine():
         plot_caption=element_text(hjust=0, size=weo_text_size),
     )
 
-def set_weo_panel_theme_plotnine():
+def set_weo_panel_theme_plotnine(figure_size=(16, 14.67)):
     base = set_weo_theme_plotnine()
     return base + theme(
-        plot_title=element_text(size=8, weight='bold', hjust=0, color=blue),
-        plot_subtitle=element_text(size=7, style='italic', hjust=0, color=blue),
-        axis_text_x=element_text(size=7, color='black'),
-        axis_text_y=element_text(size=7, color='black', hjust=1),
-        axis_title=element_text(size=7),
-        legend_text=element_text(size=6.5),
+        figure_size=figure_size,
+        plot_title=element_text(size=20, weight='bold', hjust=0, color=blue),
+        plot_subtitle=element_text(size=16, style='italic', hjust=0, color=blue),
+        axis_text_x=element_text(size=16, color='black'),
+        axis_text_y=element_text(size=16, color='black', hjust=1),
+        axis_title=element_text(size=16),
+        legend_text=element_text(size=14),
         strip_background=element_blank(),  # remove grey shading behind facet labels
-        strip_text=element_text(size=8, color='black', hjust=0, weight='bold'),  # left-aligned bold facet titles
-        strip_text_x=element_text(size=8, color='black', hjust=0, weight='bold'),
+        strip_text=element_text(size=16, color='black', hjust=0, weight='bold'),
+        strip_text_x=element_text(size=16, color='black', hjust=0, weight='bold'),
     )
 
 # ---- break generation (same as original) ----
