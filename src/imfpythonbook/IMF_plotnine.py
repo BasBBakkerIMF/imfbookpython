@@ -55,10 +55,12 @@ def _imf_theme_plotnine(
     legend_key_width,
     legend_spacing_x,
     legend_spacing_y,
+    figure_size,
 ):
-    axis_size = 10 if panel else 14
-    title_size = 14 if panel else 18
-    subtitle_size = 12 if panel else 16
+    text_size = 14 if panel else 18
+    axis_size = 14 if panel else 18
+    title_size = 18 if panel else 24
+    subtitle_size = 16 if panel else 20
     axis_titles = (
         element_blank()
         if hide_axis_titles
@@ -67,7 +69,7 @@ def _imf_theme_plotnine(
     return (
         theme_classic()
         + theme(
-            text=element_text(family=font, size=14, color="black"),
+            text=element_text(family=font, size=text_size, color="black"),
             axis_title=axis_titles,
             axis_text=element_text(
                 size=axis_size,
@@ -102,18 +104,19 @@ def _imf_theme_plotnine(
                 ha="left",
             ),
             plot_caption=element_text(
-                size=12,
+                size=12 if panel else 16,
                 family=font,
                 ha="left",
                 va="bottom",
             ),
+            figure_size=figure_size,
             plot_margin=0.02,
             legend_title=(
                 element_blank()
                 if legend_title_format is None
                 else legend_title_format
             ),
-            legend_text=element_text(size=14, family=font),
+            legend_text=element_text(size=text_size, family=font),
             legend_position=legend_position,
             legend_direction=legend_direction,
             legend_key_height=legend_key_height,
@@ -134,12 +137,13 @@ def set_imf_theme_plotnine(
     legend_key_width=13 * 72 / 25.4,
     legend_spacing_x=2 * 72 / 25.4,
     legend_spacing_y=2.5 * 72 / 25.4,
+    figure_size=(8.5, 5.5),
 ):
     """Return the original IMF Plotnine theme, matching ``theme_imf`` in R."""
     return _imf_theme_plotnine(
         font, font_color, False, False, legend_title_format, legend_position,
         legend_direction, legend_key_height, legend_key_width, legend_spacing_x,
-        legend_spacing_y,
+        legend_spacing_y, figure_size,
     )
 
 
@@ -153,12 +157,13 @@ def set_imf_panel_theme_plotnine(
     legend_key_width=13 * 72 / 25.4,
     legend_spacing_x=2 * 72 / 25.4,
     legend_spacing_y=2.5 * 72 / 25.4,
+    figure_size=(8.5, 5.5),
 ):
     """Return the original IMF panel theme, matching ``theme_imf_panel`` in R."""
     return _imf_theme_plotnine(
         font, font_color, True, False, legend_title_format, legend_position,
         legend_direction, legend_key_height, legend_key_width, legend_spacing_x,
-        legend_spacing_y,
+        legend_spacing_y, figure_size,
     )
 
 
@@ -172,12 +177,13 @@ def set_imf_2027_theme_plotnine(
     legend_key_width=13 * 72 / 25.4,
     legend_spacing_x=2 * 72 / 25.4,
     legend_spacing_y=2.5 * 72 / 25.4,
+    figure_size=(8.5, 5.5),
 ):
     """Return the 2027 IMF Plotnine theme, matching ``theme_imf_2027`` in R."""
     return _imf_theme_plotnine(
         font, font_color, False, True, legend_title_format, legend_position,
         legend_direction, legend_key_height, legend_key_width, legend_spacing_x,
-        legend_spacing_y,
+        legend_spacing_y, figure_size,
     )
 
 
@@ -191,12 +197,13 @@ def set_imf_panel_2027_theme_plotnine(
     legend_key_width=13 * 72 / 25.4,
     legend_spacing_x=2 * 72 / 25.4,
     legend_spacing_y=2.5 * 72 / 25.4,
+    figure_size=(8.5, 5.5),
 ):
     """Return the 2027 IMF panel theme, matching ``theme_imf_panel_2027`` in R."""
     return _imf_theme_plotnine(
         font, font_color, True, True, legend_title_format, legend_position,
         legend_direction, legend_key_height, legend_key_width, legend_spacing_x,
-        legend_spacing_y,
+        legend_spacing_y, figure_size,
     )
 
 
@@ -205,14 +212,14 @@ def set_imf_panel_title_theme_plotnine(font="Segoe UI", font_color=blue):
     return theme(
         plot_title=element_text(
             family=font,
-            size=16,
+            size=26,
             weight="bold",
             color=font_color,
             ha="center",
         ),
         plot_subtitle=element_text(
             family=font,
-            size=12,
+            size=20,
             color=font_color,
             ha="center",
         ),
@@ -224,14 +231,14 @@ def set_imf_panel_title_2027_theme_plotnine(font="Arial", font_color=blue_2027):
     return theme(
         plot_title=element_text(
             family=font,
-            size=16,
+            size=26,
             weight="bold",
             color=font_color,
             ha="center",
         ),
         plot_subtitle=element_text(
             family=font,
-            size=12,
+            size=20,
             color=font_color,
             ha="center",
         ),
@@ -285,11 +292,30 @@ def _test_panel_title_theme_helpers():
     standard = set_imf_panel_title_theme_plotnine()
     assert standard.themeables["plot_title"]._properties["color"] == blue
     assert standard.themeables["plot_title"]._properties["ha"] == "center"
+    assert standard.themeables["plot_title"]._properties["size"] == 26
     assert standard.themeables["plot_subtitle"]._properties["color"] == blue
 
     updated = set_imf_panel_title_2027_theme_plotnine()
     assert updated.themeables["plot_title"]._properties["color"] == blue_2027
     assert updated.themeables["plot_title"]._properties["family"] == "Arial"
+    assert updated.themeables["plot_title"]._properties["size"] == 26
+
+
+def _test_panel_theme_font_sizes():
+    standard = set_imf_theme_plotnine()
+    panel = set_imf_panel_theme_plotnine()
+    standard_2027 = set_imf_2027_theme_plotnine()
+    panel_2027 = set_imf_panel_2027_theme_plotnine()
+
+    for standard_theme, panel_theme in (
+        (standard, panel),
+        (standard_2027, panel_2027),
+    ):
+        for element in ("text", "axis_text", "plot_title", "plot_subtitle", "legend_text"):
+            assert (
+                panel_theme.themeables[element]._properties["size"]
+                < standard_theme.themeables[element]._properties["size"]
+            )
 
 
 # Demonstrations
@@ -298,6 +324,7 @@ if __name__ == "__main__":
     _test_rgb2()
     _test_palettes()
     _test_panel_title_theme_helpers()
+    _test_panel_theme_font_sizes()
 
     # Demo data
     x  = np.linspace(0, 10, 100)
