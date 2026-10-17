@@ -10,13 +10,17 @@ Functions
 rgb2(red, green, blue)
     Convert 0–255 RGB values to Matplotlib hex colour.
 set_imf_theme(myfont, myfontColor)
-    Apply the IMF “classic” theme to Matplotlib rcParams with a full rectangle border in light_grey.
+    Apply the original IMF theme to Matplotlib rcParams.
 set_imf_panel_theme(myfont, myfontColor)
-    Apply the IMF panel theme (smaller text) to Matplotlib rcParams with a full rectangle border in light_grey.
+    Apply the original IMF panel theme.
+set_imf_2027_theme(myfont, myfontColor)
+    Apply the IMF 2027 theme.
+set_imf_panel_2027_theme(myfont, myfontColor)
+    Apply the IMF 2027 panel theme.
 apply_imf_titles(ax, title, subtitle=None)
-    Helper to set both title (18pt bold) and subtitle (16pt normal) left-aligned in blue above the plot area.
+    Helper to set both title (18pt bold) and subtitle (16pt normal).
 apply_imf_panel_titles(ax, title, subtitle=None)
-    Helper to set panel-title (14pt bold) and panel-subtitle (12pt normal) left-aligned in blue above the plot area.
+    Helper to set panel-title (14pt bold) and panel-subtitle (12pt normal).
 add_text_to_figure(fig, text, y_offset)
     Add an italic caption above a figure.
 add_text_to_figure_new(fig, text, y_offset)
@@ -34,6 +38,8 @@ def rgb2(r, g, b):
     return "#{:02x}{:02x}{:02x}".format(r, g, b)
 
 blue        = rgb2(75,130,173)
+blue_2027   = rgb2(0,76,151)
+imf_blue_2027 = blue_2027
 green       = rgb2(150,186,121)
 red         = rgb2(192,0,80)
 grey        = rgb2(166,168,172)
@@ -50,76 +56,96 @@ orange      = rgb2(255,133,71)
 A4_colors     = [blue, green, grey, light_green, light_grey, light_red, dark_red]
 A4_colors_bar = [blue, green, red, grey, "black", light_green, light_grey, light_red, dark_red]
 
-# Core theme: classic with IMF tweaks
-def set_imf_theme(myfont="Segoe UI", myfontColor=blue):
-    """Apply classic IMF theme with full rectangle border in light_grey."""
+def _set_imf_theme(myfont, myfontColor, panel, theme_2027):
+    axis_size = 10 if panel else 14
+    title_size = 14 if panel else 18
     rcParams.update({
-        # Font
         "font.family": myfont,
         "font.size": 14,
-        # Full border (all four spines)
         "axes.spines.top": True,
         "axes.spines.right": True,
         "axes.spines.left": True,
         "axes.spines.bottom": True,
-        # Border styling
         "axes.edgecolor": light_grey,
         "axes.linewidth": 1,
-        # Title styling defaults (main title)
-        "axes.titlesize": 18,
+        "axes.titlesize": title_size,
         "axes.titleweight": "bold",
         "axes.titlecolor": myfontColor,
-        # Axis labels and ticks
-        "axes.labelsize": 14,
-        "xtick.labelsize": 14,
-        "ytick.labelsize": 14,
+        "axes.labelsize": axis_size,
+        "axes.labelcolor": "black",
+        "xtick.labelsize": axis_size,
+        "ytick.labelsize": axis_size,
         "xtick.color": "black",
-        "ytick.color": "black",
+        "xtick.major.size": 0,
+        "xtick.minor.size": 0,
+        "ytick.color": light_grey,
+        "ytick.labelcolor": "black",
+        "ytick.direction": "in",
+        "ytick.major.size": 5.67,
+        "ytick.major.pad": 3.5 * 72 / 25.4,
+        "ytick.minor.pad": 3.5 * 72 / 25.4,
         "axes.grid": False,
-        # Figure
         "figure.facecolor": "white",
         "figure.autolayout": True,
-        # Legend
-        "legend.fontsize": 12,
+        "legend.fontsize": 14,
         "legend.frameon": False,
     })
 
-# Panel theme: similar but smaller text
-def set_imf_panel_theme(myfont="Segoe UI", myfontColor=blue):
-    """Apply IMF panel theme with full rectangle border in light_grey and smaller text."""
+
+def _set_imf_panel_title_theme(myfont, myfontColor, theme_2027):
+    """Apply the centered overall panel-title styling used in the R helpers."""
     rcParams.update({
         "font.family": myfont,
-        "font.size": 10,
-        "axes.spines.top": True,
-        "axes.spines.right": True,
-        "axes.spines.left": True,
-        "axes.spines.bottom": True,
-        "axes.edgecolor": light_grey,
-        "axes.linewidth": 1,
-        "axes.labelsize": 10,
-        "xtick.labelsize": 10,
-        "ytick.labelsize": 10,
-        "xtick.color": "black",
-        "ytick.color": "black",
-        "axes.grid": False,
+        "axes.titlecolor": myfontColor,
+        "axes.titlesize": 16,
+        "axes.titleweight": "bold",
         "figure.facecolor": "white",
-        "figure.autolayout": True,
-        "legend.fontsize": 10,
-        "legend.frameon": False,
     })
+
+
+def set_imf_theme(myfont="Segoe UI", myfontColor=blue):
+    """Apply the original IMF theme, matching ``theme_imf`` in R."""
+    _set_imf_theme(myfont, myfontColor, panel=False, theme_2027=False)
+
+
+def set_imf_panel_theme(myfont="Segoe UI", myfontColor=blue):
+    """Apply the original IMF panel theme, matching ``theme_imf_panel`` in R."""
+    _set_imf_theme(myfont, myfontColor, panel=True, theme_2027=False)
+
+
+def set_imf_2027_theme(myfont="Arial", myfontColor="black"):
+    """Apply the IMF 2027 theme, matching ``theme_imf_2027`` in R."""
+    _set_imf_theme(myfont, myfontColor, panel=False, theme_2027=True)
+
+
+def set_imf_panel_2027_theme(myfont="Arial", myfontColor="black"):
+    """Apply the IMF 2027 panel theme, matching ``theme_imf_panel_2027`` in R."""
+    _set_imf_theme(myfont, myfontColor, panel=True, theme_2027=True)
+
+
+def set_imf_panel_title_theme(myfont="Segoe UI", myfontColor=blue):
+    """Apply the centered panel-title styling used in ``theme_imf_panel_title`` in R."""
+    _set_imf_panel_title_theme(myfont, myfontColor, theme_2027=False)
+
+
+def set_imf_panel_title_2027_theme(myfont="Arial", myfontColor=blue_2027):
+    """Apply the centered panel-title styling used in ``theme_imf_panel_title_2027`` in R."""
+    _set_imf_panel_title_theme(myfont, myfontColor, theme_2027=True)
 
 # Helper: apply title and subtitle above plot for standard theme
 def apply_imf_titles(ax, title, subtitle=None):
-    """Set main title (18pt bold) and subtitle (16pt normal) left-aligned above the plot."""
+    """Set a left-aligned title and subtitle using the active IMF theme settings."""
     for loc in ['top', 'right', 'bottom', 'left']:
         ax.spines[loc].set_edgecolor(light_grey)
         ax.spines[loc].set_linewidth(rcParams['axes.linewidth'])
+    ax.tick_params(axis="x", length=0, labelcolor="black")
+    ax.tick_params(axis="y", direction="in", length=5.67, color=light_grey, labelcolor="black")
     ax.set_title(
         title,
         loc='left',
-        fontsize=18,
-        fontweight='bold',
-        color=blue,
+        fontsize=rcParams["axes.titlesize"],
+        fontweight=rcParams["axes.titleweight"],
+        color=rcParams["axes.titlecolor"],
         pad=32
     )
     if subtitle:
@@ -129,21 +155,23 @@ def apply_imf_titles(ax, title, subtitle=None):
             ha='left', va='bottom',
             fontsize=16,
             fontweight='normal',
-            color=blue
+            color=rcParams["axes.titlecolor"]
         )
 
 # Helper: apply title and subtitle above plot for panel theme
 def apply_imf_panel_titles(ax, title, subtitle=None):
-    """Set panel title (14pt bold) and subtitle (12pt normal) left-aligned above the plot."""
+    """Set a panel title and subtitle using the active IMF theme settings."""
     for loc in ['top', 'right', 'bottom', 'left']:
         ax.spines[loc].set_edgecolor(light_grey)
         ax.spines[loc].set_linewidth(rcParams['axes.linewidth'])
+    ax.tick_params(axis="x", length=0, labelcolor="black")
+    ax.tick_params(axis="y", direction="in", length=5.67, color=light_grey, labelcolor="black")
     ax.set_title(
         title,
         loc='left',
-        fontsize=14,
-        fontweight='bold',
-        color=blue,
+        fontsize=rcParams["axes.titlesize"],
+        fontweight=rcParams["axes.titleweight"],
+        color=rcParams["axes.titlecolor"],
         pad=28
     )
     if subtitle:
@@ -153,7 +181,7 @@ def apply_imf_panel_titles(ax, title, subtitle=None):
             ha='left', va='bottom',
             fontsize=12,
             fontweight='normal',
-            color=blue
+            color=rcParams["axes.titlecolor"]
         )
 
 # Add caption above figure
@@ -177,8 +205,27 @@ def add_text_to_figure(fig, text, y_offset=0.38, primary_font="Segoe UI"):
 def add_text_to_figure_new(fig, text, y_offset=0.38, primary_font="Segoe UI"):
     return add_text_to_figure(fig, text, y_offset=y_offset, primary_font=primary_font)
 
+# Simple self-tests run when the module is executed directly.
+def _test_panel_title_theme_helpers():
+    assert blue == "#4b82ad"
+    assert blue_2027 == "#004c97"
+
+    set_imf_panel_title_theme()
+    assert "Segoe UI" in rcParams["font.family"]
+    assert rcParams["axes.titlecolor"] == blue
+
+    set_imf_panel_title_2027_theme()
+    assert "Arial" in rcParams["font.family"]
+    assert rcParams["axes.titlecolor"] == blue_2027
+
+    set_imf_2027_theme()
+    assert rcParams["axes.labelcolor"] == "black"
+
+
 # Demonstrations
 if __name__ == "__main__":
+    _test_panel_title_theme_helpers()
+
     x = np.linspace(0, 10, 100)
 
     # 1. IMF theme line plot with title & subtitle above
