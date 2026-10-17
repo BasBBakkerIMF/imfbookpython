@@ -2,9 +2,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from plotnine import (
-    ggplot, aes, geom_line, geom_bar, scale_fill_manual,
-    scale_y_continuous, facet_wrap, ggtitle, labs
+    ggplot, aes, geom_line, geom_bar, geom_point, scale_color_manual,
+    scale_fill_manual, scale_y_continuous, facet_wrap, ggtitle, labs
 )
+from plotnine.composition import plot_annotation
 import imfpythonbook as ip
 
 # Setup
@@ -41,6 +42,23 @@ def test_imf_matplotlib_alt_annotation():
     ip.IMF_matplotlib.add_text_to_figure_new(fig, "Centered Caption", y_offset=0.8)
     plt.show()
 
+def test_imf_matplotlib_2027():
+    ip.matplotlib.set_imf_2027_theme()
+    fig, ax = plt.subplots()
+    ax.plot(x, np.sin(x), color=ip.colors.blue_2027)
+    ip.matplotlib.set_titles(ax, "IMF 2027 Theme", "Subtitle")
+    plt.show()
+
+def test_imf_matplotlib_panel_2027():
+    ip.matplotlib.set_imf_panel_2027_theme()
+    fig, ax = plt.subplots()
+    ax.bar(
+        ["A", "B", "C", "D"], [3, 1, 4, 2],
+        color=[ip.colors.blue_2027, ip.colors.green, ip.colors.red, ip.colors.grey]
+    )
+    ip.matplotlib.set_panel_titles(ax, "IMF 2027 Panel Theme", "Panel Subtitle")
+    plt.show()
+
 # --- IMF_plotnine Tests ---
 def test_imf_plotnine_line():
     p = (
@@ -55,7 +73,7 @@ def test_imf_plotnine_line():
 def test_imf_plotnine_bar():
     p = (
         ggplot(df_bar, aes("category", "value", fill="category"))
-        + geom_bar(stat="identity" )
+        + geom_bar(stat="identity")
         + scale_fill_manual(values=[ip.colors.blue, ip.colors.green, ip.colors.red, ip.colors.grey])
         + ip.plotnine.set_imf_panel_theme()
     )
@@ -80,6 +98,93 @@ def test_imf_plotnine_alt_annotation():
         "Centered Caption", y_offset=1.05
     )
     print(p)
+
+def test_imf_plotnine_2027():
+    p = (
+        ggplot(df, aes("x", "sinx"))
+        + geom_line(color=ip.colors.blue_2027)
+        + ip.plotnine.set_imf_2027_theme()
+    )
+    for layer in ip.plotnine.set_titles("IMF 2027 Theme", "Subtitle"):
+        p += layer
+    print(p)
+
+def test_imf_plotnine_panel_2027():
+    p = (
+        ggplot(df_bar, aes("category", "value", fill="category"))
+        + geom_bar(stat="identity")
+        + scale_fill_manual(
+            values=[ip.colors.blue_2027, ip.colors.green, ip.colors.red, ip.colors.grey]
+        )
+        + ip.plotnine.set_imf_panel_2027_theme()
+    )
+    for layer in ip.plotnine.set_panel_titles(
+        "IMF 2027 Panel Theme", "Panel Subtitle"
+    ):
+        p += layer
+    print(p)
+
+
+def _make_imf_composition_test_data():
+    rng = np.random.default_rng(123)
+    return pd.DataFrame({
+        "dates": pd.date_range("2020-01-01", periods=12, freq="MS"),
+        "category": np.repeat(["A", "B", "C"], 4),
+        "value1": rng.uniform(50, 100, 12),
+        "value2": rng.uniform(20, 80, 12),
+    })
+
+
+def _imf_composition_test_plots(colors, panel_theme):
+    data = _make_imf_composition_test_data()
+    p1 = (
+        ggplot(data, aes("dates", "value1", color="category"))
+        + geom_line(size=1.5)
+        + scale_color_manual(values=colors)
+        + labs(title="IMF Line Chart", subtitle="IMF palette")
+        + panel_theme()
+    )
+    p2 = (
+        ggplot(data, aes("dates", "value1", fill="category"))
+        + geom_bar(stat="identity", position="stack")
+        + scale_fill_manual(values=colors)
+        + labs(title="IMF Stacked Bar", subtitle="IMF palette")
+        + panel_theme()
+    )
+    p3 = (
+        ggplot(data, aes("value1", "value2", color="category"))
+        + geom_point(size=3)
+        + scale_color_manual(values=colors)
+        + labs(title="IMF Scatter", subtitle="IMF palette")
+        + panel_theme()
+    )
+    return p1, p2, p3
+
+
+def test_imf_plotnine_panel_composition():
+    p1, p2, p3 = _imf_composition_test_plots(
+        [ip.colors.blue, ip.colors.green, ip.colors.red],
+        ip.plotnine.set_imf_panel_theme,
+    )
+    composition = (p1 | p2) / p3 + plot_annotation(
+        title="Panel Test: theme_imf_panel()",
+        subtitle="Multiple plots in a panel layout",
+        theme=ip.plotnine.set_imf_panel_title_theme(),
+    )
+    print(composition)
+
+
+def test_imf_plotnine_panel_composition_2027():
+    p1, p2, p3 = _imf_composition_test_plots(
+        [ip.colors.blue_2027, ip.colors.green, ip.colors.red],
+        ip.plotnine.set_imf_panel_2027_theme,
+    )
+    composition = (p1 | p2) / p3 + plot_annotation(
+        title="Panel Test: theme_imf_panel_2027()",
+        subtitle="Multiple plots in a panel layout",
+        theme=ip.plotnine.set_imf_panel_title_2027_theme(),
+    )
+    print(composition)
 
 # --- WEO Matplotlib Example Rebuilds ---
 def test_weo_theme_unemployment_demo():
@@ -249,11 +354,17 @@ if __name__ == "__main__":
     test_imf_matplotlib_bar()
     test_imf_matplotlib_annotation()
     test_imf_matplotlib_alt_annotation()
+    test_imf_matplotlib_2027()
+    test_imf_matplotlib_panel_2027()
 
     test_imf_plotnine_line()
     test_imf_plotnine_bar()
     test_imf_plotnine_annotation()
     test_imf_plotnine_alt_annotation()
+    test_imf_plotnine_2027()
+    test_imf_plotnine_panel_2027()
+    test_imf_plotnine_panel_composition()
+    test_imf_plotnine_panel_composition_2027()
 
     test_weo_theme_unemployment_demo()
     test_weo_theme_gdp_panel_demo()

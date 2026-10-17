@@ -101,6 +101,29 @@ for layer in ip.plotnine.set_panel_titles("Panel Title", "Panel Subtitle"):
 print(p)
 ```
 
+#### IMF 2027 themes
+
+The original IMF theme functions remain available. Use the 2027 variants for
+the Arial-based theme defined in the R theme file:
+
+```python
+import matplotlib.pyplot as plt
+import imfpythonbook as ip
+
+ip.matplotlib.set_imf_2027_theme()
+fig, ax = plt.subplots()
+ip.matplotlib.set_titles(ax, "IMF 2027 Theme", "Subtitle")
+
+theme_2027 = ip.plotnine.set_imf_2027_theme()
+```
+
+For panel charts, use `ip.matplotlib.set_imf_panel_2027_theme()` or
+`ip.plotnine.set_imf_panel_2027_theme()`. The figure-level panel title themes
+from the R scripts are also available as
+`ip.matplotlib.set_imf_panel_title_theme()` /
+`ip.plotnine.set_imf_panel_title_theme()`, and their 2027 variants via
+`*_2027_theme`.
+
 ---
 
 ## WEO-Styled Examples

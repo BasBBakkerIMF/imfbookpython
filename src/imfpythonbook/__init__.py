@@ -35,6 +35,8 @@ from types import SimpleNamespace
 # 1) Unified colors (reuse the IMF_matplotlib palette everywhere)
 colors = SimpleNamespace(
     blue=IMF_matplotlib.blue,
+    blue_2027=IMF_matplotlib.blue_2027,
+    imf_blue_2027=IMF_matplotlib.imf_blue_2027,
     green=IMF_matplotlib.green,
     red=IMF_matplotlib.red,
     grey=IMF_matplotlib.grey,
@@ -52,6 +54,10 @@ colors = SimpleNamespace(
 matplotlib = SimpleNamespace(
     set_imf_theme=IMF_matplotlib.set_imf_theme,
     set_imf_panel_theme=IMF_matplotlib.set_imf_panel_theme,
+    set_imf_2027_theme=IMF_matplotlib.set_imf_2027_theme,
+    set_imf_panel_2027_theme=IMF_matplotlib.set_imf_panel_2027_theme,
+    set_imf_panel_title_theme=IMF_matplotlib.set_imf_panel_title_theme,
+    set_imf_panel_title_2027_theme=IMF_matplotlib.set_imf_panel_title_2027_theme,
     set_titles=IMF_matplotlib.apply_imf_titles,
     set_panel_titles=IMF_matplotlib.apply_imf_panel_titles,
 )
@@ -60,6 +66,10 @@ matplotlib = SimpleNamespace(
 plotnine = SimpleNamespace(
     set_imf_theme=IMF_plotnine.set_imf_theme_plotnine,
     set_imf_panel_theme=IMF_plotnine.set_imf_panel_theme_plotnine,
+    set_imf_2027_theme=IMF_plotnine.set_imf_2027_theme_plotnine,
+    set_imf_panel_2027_theme=IMF_plotnine.set_imf_panel_2027_theme_plotnine,
+    set_imf_panel_title_theme=IMF_plotnine.set_imf_panel_title_theme_plotnine,
+    set_imf_panel_title_2027_theme=IMF_plotnine.set_imf_panel_title_2027_theme_plotnine,
     set_titles=IMF_plotnine.apply_imf_titles_plotnine,
     set_panel_titles=IMF_plotnine.apply_imf_panel_titles_plotnine,
 )
