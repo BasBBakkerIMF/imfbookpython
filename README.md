@@ -31,11 +31,26 @@ pip install git+https://github.com/BasBBakkerIMF/imfbookpython.git
 
 ## Quick start
 
-Import the package and make a simple Matplotlib chart:
+For a first chart, see the standalone Matplotlib example in [IMF
+charts](#imf-charts) below.
+
+## IMF charts
+
+### Matplotlib
+
+Use `theme_imf` / `ip.matplotlib.set_imf_theme()` for standalone charts.
+Use `theme_panel_imf` / `ip.matplotlib.set_imf_panel_theme()` for an
+individual chart that sits inside a panel or multi-chart layout. The
+panel variants use smaller headings and subheadings so titles and
+subtitles fit cleanly within each chart without crowding the overall
+layout.
+
+#### Standalone chart
 
 ``` python
 import numpy as np
 import matplotlib.pyplot as plt
+from IPython.display import display
 import imfpythonbook as ip
 
 ip.matplotlib.set_imf_theme()
@@ -43,17 +58,17 @@ x = np.linspace(0, 10, 100)
 fig, ax = plt.subplots()
 ip.matplotlib.set_titles(ax, "IMF Theme Example", "Subtitle")
 ax.plot(x, np.sin(x), color=ip.colors.blue)
-plt.show()
+display(fig)
+plt.close(fig)
 ```
 
 ![](README_files/figure-commonmark/cell-2-output-1.png)
 
-## IMF charts
-
-### Matplotlib Panel Chart
+#### Panel chart
 
 ``` python
 import matplotlib.pyplot as plt
+from IPython.display import display
 import imfpythonbook as ip
 
 ip.matplotlib.set_imf_panel_theme()
@@ -69,7 +84,8 @@ ax.bar(
     ],
 )
 ip.matplotlib.set_panel_titles(ax, "Panel Title", "Panel Subtitle")
-plt.show()
+display(fig)
+plt.close(fig)
 ```
 
 ![](README_files/figure-commonmark/cell-3-output-1.png)
@@ -78,6 +94,7 @@ plt.show()
 
 ``` python
 import matplotlib.pyplot as plt
+from IPython.display import display
 import imfpythonbook as ip
 
 ip.matplotlib.set_imf_2027_theme()
@@ -87,7 +104,8 @@ ax.bar(
     color=[ip.colors.blue_2027, ip.colors.green, ip.colors.red, ip.colors.grey]
 )
 ip.matplotlib.set_titles(ax, "IMF 2027 Theme", "Subtitle")
-plt.show()
+display(fig)
+plt.close(fig)
 
 ip.matplotlib.set_imf_panel_2027_theme()
 fig, ax = plt.subplots()
@@ -101,7 +119,8 @@ ax.bar(
     ],
 )
 ip.matplotlib.set_panel_titles(ax, "IMF 2027 Panel Theme", "Subtitle")
-plt.show()
+display(fig)
+plt.close(fig)
 ```
 
 ![](README_files/figure-commonmark/cell-4-output-1.png)
@@ -110,7 +129,13 @@ plt.show()
 
 ### Plotnine
 
-#### Standard theme
+The same distinction applies to the Plotnine helpers: use `theme_imf` /
+`ip.plotnine.set_imf_theme()` for standalone charts and
+`theme_panel_imf` / `ip.plotnine.set_imf_panel_theme()` for charts that
+are one panel in a larger layout. The panel versions use smaller
+headings and subheadings to keep each panel readable.
+
+#### Standalone chart
 
 ``` python
 import numpy as np
@@ -195,11 +220,20 @@ the dimensions.
 For multi-chart layouts, compose Plotnine charts with `|` and `/` and
 use `plot_annotation()` for a shared title and subtitle. These examples
 use explicit color scales to match the R package’s `scale_imf_colors()`
-helpers.
+helpers. When running the examples sequentially as a Windows script with
+the TkAgg backend, closing earlier plot windows can leave a stale
+toolbar callback. For rendering these compositions without opening GUI
+windows, select the non-interactive Agg backend and display the rendered
+images inline:
 
 Create reproducible data for both panel examples:
 
 ``` python
+from io import BytesIO
+import matplotlib
+matplotlib.use("Agg")
+from IPython.display import Image, display
+
 import numpy as np
 import pandas as pd
 
@@ -250,7 +284,7 @@ p3 = (
     + ip.plotnine.set_imf_panel_theme()
 )
 
-(
+composition = (
     (p1 | p2) / p3
     + plot_annotation(
         title="Panel Test: theme_imf_panel()",
@@ -260,11 +294,13 @@ p3 = (
             + theme(figure_size=(13, 11))
         ),
     )
-).show()
+)
+image = BytesIO()
+composition.draw().savefig(image, format="png", dpi=150, bbox_inches="tight")
+display(Image(data=image.getvalue()))
 ```
 
-<img src="README_files/figure-commonmark/cell-9-output-1.png"
-width="624" height="528" />
+![](README_files/figure-commonmark/cell-9-output-1.png)
 
 The 2027 panel theme uses the updated IMF blue:
 
@@ -301,7 +337,7 @@ p3_2027 = (
     + ip.plotnine.set_imf_panel_2027_theme()
 )
 
-(
+composition_2027 = (
     (p1_2027 | p2_2027) / p3_2027
     + plot_annotation(
         title="Panel Test: theme_imf_panel_2027()",
@@ -311,11 +347,15 @@ p3_2027 = (
             + theme(figure_size=(13, 11))
         ),
     )
-).show()
+)
+image_2027 = BytesIO()
+composition_2027.draw().savefig(
+    image_2027, format="png", dpi=150, bbox_inches="tight"
+)
+display(Image(data=image_2027.getvalue()))
 ```
 
-<img src="README_files/figure-commonmark/cell-10-output-1.png"
-width="624" height="528" />
+![](README_files/figure-commonmark/cell-10-output-1.png)
 
 ------------------------------------------------------------------------
 
@@ -323,10 +363,11 @@ width="624" height="528" />
 
 > These examples use the WEO modules directly (unchanged API).
 
-#### WEO-Styled Unemployment Chart (Matplotlib)
+### WEO-Styled Unemployment Chart (Matplotlib)
 
 ``` python
 import numpy as np, matplotlib.pyplot as plt
+from IPython.display import display
 from imfpythonbook.WEO_matplotlib import (
     set_weo_theme, add_y_ticks, add_x_end_ticks,
     add_weo_title, generate_breaks_auto, weo_colors, weo_text_size
@@ -348,12 +389,13 @@ ax.set_yticks(breaks['major']); ax.set_ylim(breaks['limits'])
 add_y_ticks(ax, breaks['major'], breaks['minor'], years.min(), years.max())
 add_x_end_ticks(ax, years.min(), years.max())
 add_weo_title(ax, "Figure 1.2. Unemployment Rate Change", "(Percentage point change, annual data)")
-plt.show()
+display(fig)
+plt.close(fig)
 ```
 
 ![](README_files/figure-commonmark/cell-11-output-1.png)
 
-#### WEO-Styled Real GDP Panel (Plotnine)
+### WEO-Styled Real GDP Panel (Plotnine)
 
 ``` python
 import numpy as np, pandas as pd
